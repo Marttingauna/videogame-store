@@ -1,10 +1,10 @@
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navigation from './components/navigation/navigation';
 
 import Home from './routes/home/home';
 
 const Shop = () => {
-	return <h1>Soy una pagina de compra</h1>;
+	return <h1>Pagina de compra</h1>;
 };
 const App = () => {
 	return (
