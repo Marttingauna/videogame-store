@@ -6,6 +6,7 @@ import {
 	signInWithRedirect,
 	signInWithPopup,
 	GoogleAuthProvider,
+	createUserWithEmailAndPassword,
 } from 'firebase/auth';
 /*  signInWithRedirect: Autentifica a un usuario mediante una redireccion de google.
     signInWithPopup: Inicio sesion con una ventana emergente.
@@ -46,14 +47,15 @@ export const signInWithGoogleRedirect = () =>
 
 export const db = getFirestore(); // Obtener el objeto de Firestore
 
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (
+	userAuth,
+	aditionalInformation = {}
+) => {
+	if (!userAuth) return;
 	// Crear un documento en Firestore
 	const userDocRef = doc(db, 'users', userAuth.uid); // Crear un documento en Firestore
-	console.log(userDocRef);
 
 	const userSnapshot = await getDoc(userDocRef); // Obtener un documento de Firestore
-	console.log(userSnapshot);
-	console.log(userSnapshot.exists());
 
 	if (!userSnapshot.exists()) {
 		// Si no existe el documento
@@ -66,6 +68,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 				displayName, // Nombre del usuario
 				email, // Correo del usuario
 				createdAt, // Fecha de creación del usuario
+				...aditionalInformation, // Información adicional
 			});
 		} catch (error) {
 			// Si hay un error
@@ -73,4 +76,10 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 		}
 	}
 	return userDocRef;
+};
+
+export const createAuthUserWhithEmailAndPassword = async (email, password) => {
+	if (!email || !password) return;
+	// Crear un usuario con correo y contraseña
+	return await createUserWithEmailAndPassword(auth, email, password);
 };
